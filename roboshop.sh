@@ -2,7 +2,7 @@
 
 SG_ID="sg-0ea11a7a79d5c791a" 
 AMI_ID="ami-0220d79f3f480ecf5"
-ZONE_ID="Z05013202FKF0ZL12WAOP"
+ZONE_ID="Z05813963UHKM0FRNKXB"
 DOMAIN_NAME="daws88s.online"
 
 for instance in $@
