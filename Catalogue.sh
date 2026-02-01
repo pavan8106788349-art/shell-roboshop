@@ -7,7 +7,7 @@ R="\e[31m"
 G="\e[32m"
 Y="\e[33m"
 N="\e0m"
-SCRIPT_DIR=$PWD
+SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 MONGODB_HOST=mongodb.daws88s.space
 
 if [ $USERID -ne 0 ]; then
