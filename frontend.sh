@@ -31,10 +31,6 @@ dnf module enable nginx:1.24 -y &>>$LOGS_FILE
 dnf install nginx -y &>>$LOGS_FILE
 VALIDATE $? "Installing Nginx"
 
-systemctl enable nginx &>>$LOGS_FILE
-systemctl restart nginx 
-VALIDATE $? "Enabled and start nginx"
-
 rm -rf /usr/share/nginx/html/* 
 VALIDATE $? "Remove default content"
 
@@ -47,6 +43,9 @@ rm -rf etc/nginx/nginx.conf
 
 cp $SCRIPT_DIR/nginx.conf /etc/nginx/nginx.conf
 VALIDATE $? "Copied our nginx conf file"
+
+systemctl enable nginx
+VALIDATE $? "Enabling nginx"
 
 systemctl restart nginx
 VALIDATE $? "Restarted Nginx"
