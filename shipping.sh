@@ -41,7 +41,7 @@ mkdir -p /app
 VALIDATE $? "Creating app directory"
 
 
-Vcurl -L -o /tmp/shipping.zip https://roboshop-artifacts.s3.amazonaws.com/shipping-v3.zip 
+curl -L -o /tmp/shipping.zip https://roboshop-artifacts.s3.amazonaws.com/shipping-v3.zip 
 unzip /tmp/shipping.zipALIDATE $? "Downloading shipping code"
 
 cd /app
