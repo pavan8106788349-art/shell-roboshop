@@ -49,5 +49,4 @@ cp $SCRIPT_DIR/nginx.conf /etc/nginx/nginx.conf
 VALIDATE $? "Copied our nginx conf file"
 
 systemctl restart nginx
-
 VALIDATE $? "Restarted Nginx"
