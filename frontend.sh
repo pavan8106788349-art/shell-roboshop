@@ -48,4 +48,4 @@ systemctl enable nginx
 VALIDATE $? "Enabling nginx"
 
 systemctl restart nginx
-VALIDATE $? "Restarted Nginx"
+VALIDATE $? "Restarted  Nginx"
