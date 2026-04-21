@@ -10,7 +10,7 @@ Y="\e[33m"
 N="\e[0m"
 
 SCRIPT_DIR=$PWD
-MONGODB_HOST=172.31.45.73
+MONGODB_HOST=127.0.0.1
 
 if [ $USERID -ne 0 ]; then
     echo -e "$R Please run this script with root user access $N" | tee -a $LOGS_FILE
