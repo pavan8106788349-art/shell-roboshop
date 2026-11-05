@@ -16,45 +16,49 @@ do
         --query 'Instances[0].InstanceId' \
         --output text)
 
+    echo "Instance $instance created: $INSTANCE_ID"
+
+    aws ec2 wait instance-running --instance-ids "$INSTANCE_ID"
+
     if [ "$instance" = "frontend" ]; then
         IP=$(aws ec2 describe-instances \
             --instance-ids "$INSTANCE_ID" \
             --query 'Reservations[0].Instances[0].PublicIpAddress' \
             --output text)
-        RECORD_NAME ="$DOMAIN_NAME" # daws88s.quest    
+        RECORD_NAME="$DOMAIN_NAME"            # daws88s.quest
     else
         IP=$(aws ec2 describe-instances \
             --instance-ids "$INSTANCE_ID" \
             --query 'Reservations[0].Instances[0].PrivateIpAddress' \
             --output text)
-        RECORD_NAME = "$instance.$DOMAIN_NAME" # mongodb.daws88s.quest    
+        RECORD_NAME="$instance.$DOMAIN_NAME"  # mongodb.daws88s.quest
     fi
 
     echo "IP Address: $IP"
 
-    aws route53 change-resource-record-sets \
-    --hosted-zone-id $ZONE_ID \
-    --change-batch '
+    if aws route53 change-resource-record-sets \
+        --hosted-zone-id "$ZONE_ID" \
+        --change-batch '
         {
-        "Comment": "Updating record",
-        "Changes": [
-            {
-            "Action": "UPSERT",
-            "ResourceRecordSet": {
-                "Name": "'$RECORD_NAME'",
-                "Type": "A",
-                "TTL": 1,
-                "ResourceRecords": [
-                { "Value": "'$IP'" }
-                ]
-            }
-            }
-        ]
-    }
-    '
-
-    echo "record updated for $instance"
-    
+            "Comment": "Updating record",
+            "Changes": [
+                {
+                    "Action": "UPSERT",
+                    "ResourceRecordSet": {
+                        "Name": "'"$RECORD_NAME"'",
+                        "Type": "A",
+                        "TTL": 1,
+                        "ResourceRecords": [
+                            { "Value": "'"$IP"'" }
+                        ]
+                    }
+                }
+            ]
+        }
+        '
+    then
+        echo "record updated for $instance"
+    else
+        echo "FAILED to update record for $instance"
+    fi
 done
-
-
