@@ -1,7 +1,8 @@
 #!/bin/bash
 USERID=$(id -u)
 LOGS_FOLDER="/var/log/shell-roboshop"
-LOGS_FILE="$LOGS_FOLDER/$0.log"
+SCRIPT_NAME=$(basename "$0" .sh)
+LOGS_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log"
 R="\e[31m"
 G="\e[32m"
 Y="\e[33m"
@@ -26,18 +27,18 @@ VALIDATE(){
 cp mongo.repo /etc/yum.repos.d/mongo.repo
 VALIDATE $? "Copying Mongo Repo"
 
-dnf install mongodb-org -y
+dnf install mongodb-org -y &>>$LOGS_FILE
 VALIDATE $? "Installing MongoDB Server"
 
-systemctl enable MongoDB
+systemctl enable mongod &>>$LOGS_FILE
 VALIDATE $? "Enabling MongoDB"
 
-systemctl start MongoDB
-VALIDATE $? "Start MongoDB"
+systemctl start mongod &>>$LOGS_FILE
+VALIDATE $? "Starting MongoDB"
 
 sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mongod.conf
 VALIDATE $? "Allowing remote connections"
 
-sytemctl restart mongod
+systemctl restart mongod &>>$LOGS_FILE
 VALIDATE $? "Restarted MongoDB"
 
