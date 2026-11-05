@@ -1,34 +1,36 @@
 
 #!/bin/bash
 
-SG_ID ="sg-0a18511945dbf7c97" # replace with your ID
-AMI_ID ="ami-0055977a6e828a4f4"
+SG_ID="sg-0a18511945dbf7c97"
+AMI_ID="ami-0055977a6e828a4f4"
 
-for instance in $@
+for instance in "$@"
 do
-   instance_id = $( aws ec2 run-instances \
-    --image-id $AMI_ID \
-    --instance-type t3.micro \
-    --security-group-ids $SG_ID \
-    --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=$instance}]" \
-    --query 'Instances[0].Instanceid' \
-    --output text )
+    INSTANCE_ID=$(aws ec2 run-instances \
+        --image-id "$AMI_ID" \
+        --instance-type t3.micro \
+        --security-group-ids "$SG_ID" \
+        --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=$instance}]" \
+        --query 'Instances[0].InstanceId' \
+        --output text)
 
-    if [ $instance == "frontend" ]; then
-       IP = $(
-             aws ec2 describe-instances \
-             --instance-ids $instance_id \
-             --query 'Reservations[].Instances[].PublicIpAddress' \
-             --output.text 
-        )
+    echo "Instance $instance created: $instance_id"
+
+    aws ec2 wait instance-running --instance-ids "$instance_id"
+
+    if [ "$instance" = "frontend" ]; then
+        IP=$(aws ec2 describe-instances \
+            --instance-ids "$INSTANCE_ID" \
+            --query 'Reservations[0].Instances[0].PublicIpAddress' \
+            --output text)
     else
-        IP = $(
-             aws ec2 describe-instances \
-             --instance-ids $instance_id \
-             --query 'Reservations[].Instances[].PrivateIpAddress' \
-             --output.text 
-        )
-    fi    
+        IP=$(aws ec2 describe-instances \
+            --instance-ids "$INSTANCE_ID" \
+            --query 'Reservations[0].Instances[0].PrivateIpAddress' \
+            --output text)
+    fi
+
+    echo "IP Adress: $IP"
 done
-    
+
 
