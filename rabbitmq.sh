@@ -8,7 +8,7 @@ G="\e[32m"
 Y="\e[33m"
 N="\e[0m"
 SCRIPT_DIR=$PWD
-MySQL_HOST=mysql.daws88s.quest
+MYSQL_HOST=mysql.daws88s.quest
 
 if [ $USERID -ne 0 ]; then
     echo -e "$R Please run this script with root user access $N" | tee -a $LOGS_FILE
@@ -26,16 +26,16 @@ VALIDATE(){
     fi
 }
 
-cp SCRIPT_DIR/rabbitmq.repo /etc/yum.repos.d/rabbitmq.repo
-VALIDATE $? "Added rabbitmq repo"
+cp $SCRIPT_DIR/rabbitmq.repo /etc/yum.repos.d/rabbitmq.repo
+VALIDATE $? "Added RabbitMQ repo"
 
-dnf install rabbitmq-server -y
+dnf install rabbitmq-server -y &>>$LOGS_FILE
 VALIDATE $? "Installing RabbitMQ server"
 
-systemctl enable rabbitmq-server
+systemctl enable rabbitmq-server &>>$LOGS_FILE
 systemctl start rabbitmq-server
 VALIDATE $? "Enabled and started rabbitmq"
 
-rabbitmqctl add_user roboshop roboshop123
-rabbitmqctl set_permissions -p / roboshop ".*" ".*" ".*"
-VAIDATE "created user and given permissions"
+rabbitmqctl add_user roboshop roboshop123 &>>$LOGS_FILE
+rabbitmqctl set_permissions -p / roboshop ".*" ".*" ".*" &>>$LOGS_FILE
+VALIDATE $? "created user and gien permissions"
