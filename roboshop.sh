@@ -1,7 +1,7 @@
 
 #!/bin/bash
 
-SG_ID="sg-0a18511945dbf7c97"
+SG_ID="sg-0928bb8a23ddc1ef9"
 AMI_ID="ami-0055977a6e828a4f4"
 ZONE_ID="Z02847951R6DDEZ150FJO"
 DOMAIN_NAME="daws88s.quest"
