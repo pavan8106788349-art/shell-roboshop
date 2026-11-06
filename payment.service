@@ -1,0 +1,22 @@
+sudo tee /etc/systemd/system/payment.service <<'EOF'
+[Unit]
+Description=Payment Service
+After=network.target
+
+[Service]
+User=roboshop
+Group=roboshop
+WorkingDirectory=/app
+Environment=CART_HOST=cart.daws88s.quest
+Environment=CART_PORT=8080
+Environment=USER_HOST=user.daws88s.quest
+Environment=USER_PORT=8080
+Environment=AMQP_HOST=rabbitmq.daws88s.quest
+Environment=AMQP_USER=roboshop
+Environment=AMQP_PASS=roboshop123
+ExecStart=/usr/local/bin/uwsgi --ini /app/payment.ini
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOF
